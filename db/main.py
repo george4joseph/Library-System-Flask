@@ -19,9 +19,6 @@ def load_config():
     print(config_file)
     
     config.read(config_file)
-    print("wow----------------")
-
-    print(config.get('DB', 'database_url'))
 
     return config
 
