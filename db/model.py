@@ -39,6 +39,18 @@ class Book(db.Model):
         "IssueBook", backref=db.backref("posts", lazy=True), cascade="all,delete"
     )
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'author': self.author,
+            'description': self.description,
+            'total_copy': self.total_copy,
+            'issued_copy': self.issued_copy,
+            'present_copy': self.present_copy,
+            # Exclude the 'issue' relationship to avoid circular serialization
+        }
+
 # class Book(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     name = db.Column(db.String(255), unique=True)
