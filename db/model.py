@@ -35,6 +35,7 @@ class Book(db.Model):
     total_copy = db.Column(db.Integer)
     issued_copy = db.Column(db.Integer)
     present_copy = db.Column(db.Integer)
+    base_fees = db.Column(db.Integer)
     issue = db.relationship(
         "IssueBook", backref=db.backref("posts", lazy=True), cascade="all,delete"
     )
