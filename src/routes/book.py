@@ -24,13 +24,20 @@ def updateSingleBook(id):
     author = book_detail['author']
     description = book_detail['description']
     base_fees = book_detail['base_fees']
+    total_copy = book_detail.get('total_copy')
+    issued_copy = book_detail.get('issued_copy')
+    present_copy = book_detail.get('present_copy')
 
     return book.updateBook(
         book_id=id,
         name=name,
         author=author,
         description=description,
-        base_fees=base_fees
+        base_fees=base_fees,
+        total_copy=total_copy,
+        issued_copy=issued_copy,
+        present_copy=present_copy,
+
     )
 @bookRoutes.route('delete/<int:id>',methods=['DELETE'])
 def deleteSingleBook(id):

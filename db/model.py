@@ -13,6 +13,16 @@ class User(UserMixin,db.Model):
     password = db.Column(db.String(255))
     book = db.relationship("IssueBook", backref="issue", lazy=True)
     admin = db.Column(db.Boolean, default=False)
+    amount_pending = db.Column(db.Integer)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'admin': self.admin,
+            'amount_pending': self.amount_pending
+        }
 
 
 class IssueBook(db.Model):
@@ -24,6 +34,18 @@ class IssueBook(db.Model):
     date_issued = db.Column(db.DateTime(), default=None)
     date_return = db.Column(db.DateTime(), default=None)
     book = db.Column(db.Integer, db.ForeignKey("book.id"))
+    amount = db.Column(db.Integer)
+    amount_paid = db.Column(db.Boolean, default=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'date_added': self.date_added.strftime('%Y-%m-%d %H:%M:%S') if self.date_added else None,
+            'issued_by': self.issued_by,
+            'date_issued': self.date_issued.strftime('%Y-%m-%d %H:%M:%S') if self.date_issued else None,
+            'date_return': self.date_return.strftime('%Y-%m-%d %H:%M:%S') if self.date_return else None,
+            'amount' : self.amount
+        }
 
 class Book(db.Model):
     __tablename__ = 'book'
