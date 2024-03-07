@@ -16,15 +16,17 @@ def getAllBooks(name,author):
 
     # Execute the query and return the results as JSON
     books = query.all()
-    return jsonify([book.to_dict() for book in books])
+    bookJson = [book.to_dict() for book in books]
+    return jsonify(status = 200, data = bookJson)
     
 def getBook(id):
     books = Book.query.get_or_404(id)
-    return jsonify(books.to_dict())
+    return jsonify(status = 200, data = books.to_dict())
+    # return jsonify(books.to_dict())
 
 def updateBook(book_id, name, author, description, base_fees, total_copy, issued_copy, present_copy):
     book = Book.query.get(book_id)
-    if name != '':
+    if name:
         book.name = name
     if author:
         book.author = author
@@ -45,10 +47,10 @@ def updateBook(book_id, name, author, description, base_fees, total_copy, issued
     return jsonify(book.to_dict())
 
 def deleteBook(id):
-    book = Book.query.get_or_404(id)
+    book = Book.query.get(id)
     dbase.session.delete(book)
     dbase.session.commit()
-    return jsonify({'message': 'Book deleted'}), 204
+    return jsonify({'message': 'Book deleted'}), 200
 
 def createBook(name, author, description, base_fees):
     

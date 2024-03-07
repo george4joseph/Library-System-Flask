@@ -4,12 +4,13 @@ from flask import flash, jsonify
 
 def getAllMembers():
     users = User.query.all()
-
-    return jsonify([user.to_dict() for user in users])
+    dataJson = [user.to_dict() for user in users]
+    return jsonify(status=200, data=dataJson),200
+    
 
 def getMember(id):
     user = User.query.get_or_404(id)
-    return jsonify(user.to_dict())
+    return jsonify(status=200, data=user.to_dict())
 
 def updateUser(user_id, name, email, password, admin, amount):
     user = User.query.get(user_id)
@@ -24,10 +25,11 @@ def updateUser(user_id, name, email, password, admin, amount):
     if amount is not None:
         user.amount = amount
 
+    
     db.session.add(user)
     db.session.commit()
-
-    return jsonify(user.to_dict())
+    user = User.query.get(user_id)
+    return jsonify(status=200, data= user.to_dict())
 
 def deleteUser(user_id):
     user = User.query.get_or_404(user_id)

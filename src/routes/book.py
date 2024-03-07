@@ -19,11 +19,10 @@ def viewSingleBook(id):
 @bookRoutes.route('edit/<int:id>',methods=['PATCH'])
 def updateSingleBook(id):
     book_detail = json.loads(request.data)
-
-    name = book_detail['name']
-    author = book_detail['author']
-    description = book_detail['description']
-    base_fees = book_detail['base_fees']
+    name = book_detail.get('name')
+    author = book_detail.get('author')
+    description = book_detail.get('description')
+    base_fees = book_detail.get('base_fees')
     total_copy = book_detail.get('total_copy')
     issued_copy = book_detail.get('issued_copy')
     present_copy = book_detail.get('present_copy')
@@ -88,6 +87,7 @@ def importFromFrappe():
 
     print(keepCount)
     result_data = {'message': 'Data imported successfully',
+                   'status': 200,
                    'imported_books': keepCount,
                    }
     return jsonify(result_data)
