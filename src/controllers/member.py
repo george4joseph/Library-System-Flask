@@ -39,14 +39,14 @@ def deleteUser(user_id):
 
 def createUser(name, email, password, admin=False):
     # Create a new user instance
-    new_user = User(name=name, email=email, password=password, admin=admin)
+    new_user = User(name=name, email=email, password=password, admin=admin, amount_pending = 0)
 
     # Add the new user to the database
     db.session.add(new_user)
     db.session.commit()
 
     # Return the details of the created user as a JSON response
-    return jsonify(new_user.to_dict())
+    return jsonify(status=200, data=new_user.to_dict())
 
 def get_users_with_issued_books():
     users_with_books = []
@@ -68,4 +68,4 @@ def get_users_with_issued_books():
         user_dict['issued_books'] = issued_books
         users_with_books.append(user_dict)
 
-    return jsonify(users_with_books)
+    return jsonify(status=200, data=users_with_books)

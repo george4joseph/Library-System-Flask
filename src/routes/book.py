@@ -16,6 +16,34 @@ def view_book():
 def viewSingleBook(id):
     return book.getBook(id)
 
+@bookRoutes.route('create',methods=['POST'])
+def createSingleBook():
+    name, author, description, base_fees
+    book_detail = json.loads(request.data)
+    name = book_detail.get('name')
+    author = book_detail.get('author')
+    description = book_detail.get('description')
+    base_fees = book_detail.get('base_fees')
+    total_copy = book_detail.get('total_copy')
+    return book.createBook()
+
+# issue_book
+@bookRoutes.route('issue',methods=['POST'])
+def issueSingleBook():
+    book_detail = json.loads(request.data)
+    issued_by = book_detail.get('user_id')
+    book_id = book_detail.get('book_id')
+    date_issued = book_detail.get('date')
+    return book.issue_book(issued_by,book_id,date_issued)
+
+@bookRoutes.route('return',methods=['POST'])
+def returnSingleBook():
+    book_detail = json.loads(request.data)
+    issue_id = book_detail.get('issue_id')
+    amount_paid = book_detail.get('amount_paid')
+    date_return = book_detail.get('date_return')
+    return book.return_book(amount_paid=amount_paid, date_return=date_return, issue_id=issue_id)
+
 @bookRoutes.route('edit/<int:id>',methods=['PATCH'])
 def updateSingleBook(id):
     book_detail = json.loads(request.data)

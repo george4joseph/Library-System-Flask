@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from db.model import Book, IssueBook, User
 from db import dbase
 from flask import flash,jsonify, request
@@ -44,25 +44,25 @@ def updateBook(book_id, name, author, description, base_fees, total_copy, issued
     dbase.session.add(book)
     dbase.session.commit()
 
-    return jsonify(book.to_dict())
+    return jsonify(status = 200, data = book.to_dict()), 200
 
 def deleteBook(id):
     book = Book.query.get(id)
     dbase.session.delete(book)
     dbase.session.commit()
-    return jsonify({'message': 'Book deleted'}), 200
+    return jsonify({'message': 'Book deleted', "status": 200}), 200
 
 def createBook(name, author, description, base_fees):
     
     # Create a new book instance
-    new_book = Book(name=name, author=author, description=description, base_fees=base_fees)
+    new_book = Book(name=name, author=author, description=description, base_fees=base_fees, total_copy = 10, present_copy = 10, issued_copy = 0)
 
     # Add the new book to the database
     dbase.session.add(new_book)
     dbase.session.commit()
 
     # Return the details of the created book as a JSON response
-    return jsonify(new_book.to_dict())
+    return jsonify(status = 200, data = new_book.to_dict())
 
 def processBooks(bookDetails):
     savedCount = 0
@@ -84,12 +84,12 @@ def issue_book(issued_by, book_id, date_issued):
     issue = IssueBook(
         issued_by=issued_by,
         book=book_id,
-        date_issued=datetime.strptime(date_issued, '%Y-%m-%d %H:%M:%S'),
+        date_issued=datetime.strptime(date_issued, "%d-%m-%Y"),
         amount= books.base_fees
     )
     # updateBook(issued_copy=1, present_copy= books.total_copy - books.issued_copy - 1)
-    books.issued_copy = 1 
-    books.present_copy = books.total_copy - books.issued_copy - 1
+    books.issued_copy += 1 
+    books.present_copy = books.total_copy - books.issued_copy 
 
     user = User.query.get(issued_by)
     user.amount_pending = user.amount_pending + books.base_fees
@@ -112,7 +112,7 @@ def issue_book(issued_by, book_id, date_issued):
 def return_book(issue_id, date_return, amount_paid):
     # Create a new instance of IssueBook
     issue = IssueBook.query.get_or_404(issue_id)
-    issue.date_return = datetime.strptime(date_return, '%Y-%m-%d %H:%M:%S')
+    issue.date_return = datetime.strptime(date_return, "%d-%m-%Y")
     issue.amount_paid = amount_paid
     
     books = Book.query.get_or_404(issue.book)
@@ -121,17 +121,15 @@ def return_book(issue_id, date_return, amount_paid):
 
     if amount_paid:
         user = User.query.get(issue.issued_by)
-        user.amount_pending = user.amount_pending - books.base_fees
+        user.amount_pending = user.amount_pending - amount_paid
         dbase.session.add(user)
 
     # Save the instance to the database
     dbase.session.add(issue)
     dbase.session.add(books)
     
-
-    
     dbase.session.commit()
 
     issue = IssueBook.query.get_or_404(issue_id)
     # Return the details of the created book as a JSON response
-    return jsonify(issue.to_dict())
+    return jsonify(status = 200, data = issue.to_dict()), 200

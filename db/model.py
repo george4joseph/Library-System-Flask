@@ -35,12 +35,11 @@ class IssueBook(db.Model):
     date_return = db.Column(db.DateTime(), default=None)
     book = db.Column(db.Integer, db.ForeignKey("book.id"))
     amount = db.Column(db.Integer)
-    amount_paid = db.Column(db.Boolean, default=False)
+    amount_paid = db.Column(db.Integer, default=0)
 
     def to_dict(self):
         return {
             'id': self.id,
-            'date_added': self.date_added.strftime('%Y-%m-%d %H:%M:%S') if self.date_added else None,
             'issued_by': self.issued_by,
             'date_issued': self.date_issued.strftime('%Y-%m-%d %H:%M:%S') if self.date_issued else None,
             'date_return': self.date_return.strftime('%Y-%m-%d %H:%M:%S') if self.date_return else None,

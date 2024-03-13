@@ -50,3 +50,8 @@ def createNewUser():
         email=email,
         password=password,
     )
+
+# get_users_with_issued_books
+@memberRoutes.route('/issued-books',methods=['GET'])
+def booksIssued():
+    return member.get_users_with_issued_books()
